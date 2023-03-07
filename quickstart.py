@@ -10,8 +10,8 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
-
+SCOPES = ['https://www.googleapis.com/auth/calendar']
+test_calendar = "c_a8250bb9bcb5c691746693d42541f09b7e5bdc1ee6eac7dad4fc8ffb02dde462@group.calendar.google.com"
 
 def main():
     """Shows basic usage of the Google Calendar API.
@@ -41,10 +41,12 @@ def main():
         # Call the Calendar API
         now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
         print('Getting the upcoming 10 events')
-        events_result = service.events().list(calendarId='primary', timeMin=now,
+        events_result = service.events().list(calendarId=test_calendar, timeMin=now,
                                               maxResults=10, singleEvents=True,
                                               orderBy='startTime').execute()
         events = events_result.get('items', [])
+
+        service.events().delete(calendarId=test_calendar, eventId="6u23sc6jvd61aijobh8ro23g97").execute()
 
         if not events:
             print('No upcoming events found.')

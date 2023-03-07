@@ -15,13 +15,13 @@ import pandas as pd
 
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 test_calendar = "c_a8250bb9bcb5c691746693d42541f09b7e5bdc1ee6eac7dad4fc8ffb02dde462@group.calendar.google.com"
 cyclotron_facility_use = "rr683mb1llhgtj1lvpu1f10jro@group.calendar.google.com"
+current_cal = test_calendar
 
-
-def main():
+def main(allEvents):
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
@@ -47,14 +47,32 @@ def main():
         service = build('calendar', 'v3', credentials=creds)
 
         now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-        
+
+        with open('eventIDs.txt','r+') as ids: 
+            for id in ids:
+                id = id.rstrip()
+                if service.events().get(calendarId=current_cal, eventId=id).execute():
+                    event = service.events().get(calendarId=current_cal, eventId=id).execute()
+                    start = event['start'].get('dateTime', event['start'].get('date'))
+                    if start > now:
+                        service.events().delete(calendarId=current_cal, eventId=event["id"]).execute()
+            ids.truncate(0)
+            ids.close()
+        print(allEvents)
+        with open('eventIDs.txt', 'w') as f:
+            for index in allEvents.index:
+                created_event = service.events().quickAdd(
+                calendarId=current_cal,
+                text = allEvents["Type"][index] + " on " + allEvents["Time"][index]).execute()
+                f.write(created_event["id"] + "\n")
+        f.close()
 
     except HttpError as error:
         print('An error occurred: %s' % error)
 
 #allEvents = dataframe consisting of all events to be added to calendar
 
-def grabEvents(allEvents):
+def grabEvents():
     #name of file to be read
     filename = "CyclotronSched.html"
 
@@ -69,6 +87,7 @@ def grabEvents(allEvents):
     for index, value in enumerate(data):
         data[index] = np.char.strip(value)
         
+        #test
     data_length = data.size
 
     #remove header text and column indices
@@ -116,8 +135,6 @@ def grabEvents(allEvents):
     #drop unnecessary columns
     df = df.drop(["Notes"], axis =1)
     df = df.drop(["Desc."], axis =1)
-
-    df["Time"] = pd.to_datetime(df["Time"])
 
     return df
 
