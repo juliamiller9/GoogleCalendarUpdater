@@ -67,6 +67,8 @@ def main(allEvents):
                 f.write(created_event["id"] + "\n")
         f.close()
 
+
+
     except HttpError as error:
         print('An error occurred: %s' % error)
 
