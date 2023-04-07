@@ -1,0 +1,5 @@
+Code to run in shell:
+cd Desktop
+mv CyclotronSched.html Work/Projects/GoogleCalendarUpdater/
+cd Work/Projects/GoogleCalendarUpdater/
+python3 update.py

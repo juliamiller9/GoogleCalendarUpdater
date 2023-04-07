@@ -19,7 +19,7 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 test_calendar = "c_a8250bb9bcb5c691746693d42541f09b7e5bdc1ee6eac7dad4fc8ffb02dde462@group.calendar.google.com"
 cyclotron_facility_use = "rr683mb1llhgtj1lvpu1f10jro@group.calendar.google.com"
-current_cal = test_calendar
+current_cal = cyclotron_facility_use
 
 def main(allEvents):
     """Shows basic usage of the Google Calendar API.
@@ -51,20 +51,26 @@ def main(allEvents):
         with open('eventIDs.txt','r+') as ids: 
             for id in ids:
                 id = id.rstrip()
-                if service.events().get(calendarId=current_cal, eventId=id).execute():
+                try: 
                     event = service.events().get(calendarId=current_cal, eventId=id).execute()
                     start = event['start'].get('dateTime', event['start'].get('date'))
                     if start > now:
                         service.events().delete(calendarId=current_cal, eventId=event["id"]).execute()
+                except HttpError as error:
+                    break
+
             ids.truncate(0)
             ids.close()
         print(allEvents)
         with open('eventIDs.txt', 'w') as f:
             for index in allEvents.index:
-                created_event = service.events().quickAdd(
-                calendarId=current_cal,
-                text = allEvents["Type"][index] + " on " + allEvents["Time"][index]).execute()
-                f.write(created_event["id"] + "\n")
+                try:
+                    created_event = service.events().quickAdd(
+                    calendarId=current_cal,
+                    text = allEvents["Type"][index] + " on " + allEvents["Time"][index]).execute()
+                    f.write(created_event["id"] + "\n")
+                except HttpError as error:
+                    break
         f.close()
 
 
