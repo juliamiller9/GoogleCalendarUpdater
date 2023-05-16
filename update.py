@@ -12,6 +12,7 @@ from googleapiclient.errors import HttpError
 from bs4 import BeautifulSoup
 import numpy as np
 import pandas as pd
+import re
 #test
 
 # If modifying these scopes, delete the file token.json.
@@ -19,7 +20,7 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 test_calendar = "c_a8250bb9bcb5c691746693d42541f09b7e5bdc1ee6eac7dad4fc8ffb02dde462@group.calendar.google.com"
 cyclotron_facility_use = "rr683mb1llhgtj1lvpu1f10jro@group.calendar.google.com"
-current_cal = cyclotron_facility_use
+current_cal = test_calendar
 
 def main(allEvents):
     """Shows basic usage of the Google Calendar API.
@@ -53,7 +54,7 @@ def main(allEvents):
                 id = id.rstrip()
                 try: 
                     event = service.events().get(calendarId=current_cal, eventId=id).execute()
-                    start = event['start'].get('dateTime', event['start'].get('date'))
+                    start = event['start'].get('dateTime')
                     if start > now:
                         service.events().delete(calendarId=current_cal, eventId=event["id"]).execute()
                 except HttpError as error:
@@ -64,10 +65,13 @@ def main(allEvents):
         print(allEvents)
         with open('eventIDs.txt', 'w') as f:
             for index in allEvents.index:
+                # timeRegex = '\d+:\d+ [a-zA-Z][a-zA-Z]'
+                # eventTime = re.match(timeRegex, allEvents["Time"][index])
+                eventTime = allEvents["Time"][index]
                 try:
                     created_event = service.events().quickAdd(
                     calendarId=current_cal,
-                    text = allEvents["Type"][index] + " on " + allEvents["Time"][index]).execute()
+                    text = allEvents["Type"][index] + " on " + eventTime).execute()
                     f.write(created_event["id"] + "\n")
                 except HttpError as error:
                     break
