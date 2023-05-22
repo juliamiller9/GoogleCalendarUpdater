@@ -14,12 +14,13 @@ import numpy as np
 import pandas as pd
 import re
 
-# If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/calendar']
-
 test_calendar = "c_a8250bb9bcb5c691746693d42541f09b7e5bdc1ee6eac7dad4fc8ffb02dde462@group.calendar.google.com"
 cyclotron_facility_use = "rr683mb1llhgtj1lvpu1f10jro@group.calendar.google.com"
-current_cal = test_calendar
+
+# If modifying these scopes, delete the file token.json.
+SCOPES = ['https://www.googleapis.com/auth/calendar']
+EVENT_DURATION = 30
+CALENDAR = cyclotron_facility_use
 
 def main(allEvents):
     """Shows basic usage of the Google Calendar API.
@@ -52,10 +53,10 @@ def main(allEvents):
             for id in ids:
                 id = id.rstrip()
                 try: 
-                    event = service.events().get(calendarId=current_cal, eventId=id).execute()
+                    event = service.events().get(calendarId=CALENDAR, eventId=id).execute()
                     start = event['start'].get('dateTime')
                     if start > now:
-                        service.events().delete(calendarId=current_cal, eventId=event["id"]).execute()
+                        service.events().delete(calendarId=CALENDAR, eventId=event["id"]).execute()
                 except HttpError as error:
                     break
 
@@ -64,15 +65,13 @@ def main(allEvents):
         print(allEvents)
         with open('eventIDs.txt', 'w') as f:
             for index in allEvents.index:
-                # timeRegex = '\d+:\d+ [a-zA-Z][a-zA-Z]'
-                # eventTime = re.match(timeRegex, allEvents["Time"][index])
                 eventTime = allEvents["Time"][index]
-                start = datetime.datetime.strptime(eventTime, "%m/%d/%y %I:%M %p").isoformat() + 'Z'
+                start = datetime.datetime.strptime(eventTime, "%m/%d/%y %I:%M %p").isoformat() + 'Z' 
                 if start > now:
                     try:
                         created_event = service.events().quickAdd(
-                        calendarId=current_cal,
-                        text = allEvents["Type"][index] + " on " + eventTime).execute()
+                        calendarId=CALENDAR,
+                        text = allEvents["Type"][index] + " on " + eventTime + "for" + EVENT_DURATION + "minutes").execute()
                         f.write(created_event["id"] + "\n")
                     except HttpError as error:
                         break
