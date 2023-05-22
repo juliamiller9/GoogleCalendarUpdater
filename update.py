@@ -18,9 +18,9 @@ test_calendar = "c_a8250bb9bcb5c691746693d42541f09b7e5bdc1ee6eac7dad4fc8ffb02dde
 cyclotron_facility_use = "rr683mb1llhgtj1lvpu1f10jro@group.calendar.google.com"
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/calendar']
-EVENT_DURATION = 30
-CALENDAR = cyclotron_facility_use
+SCOPES = ['https://www.googleapis.com/auth/calendar'] #scope allows for freely editing calendar
+EVENT_DURATION = "30" #string representing  appointment duration in minutes 
+CALENDAR = cyclotron_facility_use #id of calendar to be updated
 
 def main(allEvents):
     """Shows basic usage of the Google Calendar API.
@@ -47,7 +47,7 @@ def main(allEvents):
     try:
         service = build('calendar', 'v3', credentials=creds)
 
-        now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
+        now = datetime.datetime.utcnow().isoformat() + 'Z'
 
         with open('eventIDs.txt','r+') as ids: 
             for id in ids:
@@ -71,7 +71,7 @@ def main(allEvents):
                     try:
                         created_event = service.events().quickAdd(
                         calendarId=CALENDAR,
-                        text = allEvents["Type"][index] + " on " + eventTime + "for" + EVENT_DURATION + "minutes").execute()
+                        text = allEvents["Type"][index] + " on " + eventTime + " for " + EVENT_DURATION + " minutes").execute()
                         f.write(created_event["id"] + "\n")
                     except HttpError as error:
                         break
