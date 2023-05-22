@@ -67,13 +67,15 @@ def main(allEvents):
                 # timeRegex = '\d+:\d+ [a-zA-Z][a-zA-Z]'
                 # eventTime = re.match(timeRegex, allEvents["Time"][index])
                 eventTime = allEvents["Time"][index]
-                try:
-                    created_event = service.events().quickAdd(
-                    calendarId=current_cal,
-                    text = allEvents["Type"][index] + " on " + eventTime).execute()
-                    f.write(created_event["id"] + "\n")
-                except HttpError as error:
-                    break
+                start = datetime.datetime.strptime(eventTime, "%m/%d/%y %I:%M %p").isoformat() + 'Z'
+                if start > now:
+                    try:
+                        created_event = service.events().quickAdd(
+                        calendarId=current_cal,
+                        text = allEvents["Type"][index] + " on " + eventTime).execute()
+                        f.write(created_event["id"] + "\n")
+                    except HttpError as error:
+                        break
         f.close()
 
 
