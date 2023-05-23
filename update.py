@@ -1,3 +1,7 @@
+#Julia Miller
+#Last updated May 22, 2023
+#Based off of quickstart.py from https://developers.google.com/calendar/api/quickstart/python
+
 from __future__ import print_function
 
 import datetime
@@ -47,38 +51,35 @@ def main(allEvents):
     try:
         service = build('calendar', 'v3', credentials=creds)
 
-        now = datetime.datetime.utcnow().isoformat() + 'Z'
-
+        now = datetime.datetime.utcnow().isoformat() + 'Z' #get the current time, Z indicates UTC
+        #eventIDs.txt contains event IDs from events added the previous run
+        #iterate through all IDs
         with open('eventIDs.txt','r+') as ids: 
             for id in ids:
                 id = id.rstrip()
-                try: 
-                    event = service.events().get(calendarId=CALENDAR, eventId=id).execute()
+                try: #check whether event w/ corresponding ID exists on calendar, delete if so
+                    event = service.events().get(calendarId=CALENDAR, eventId=id).execute() 
                     start = event['start'].get('dateTime')
-                    if start > now:
+                    if start > now: #don't delete events that have already happened
                         service.events().delete(calendarId=CALENDAR, eventId=event["id"]).execute()
                 except HttpError as error:
                     break
-
-            ids.truncate(0)
+            ids.truncate(0) #clear eventIDs.txt
             ids.close()
-        print(allEvents)
+        #allEvents is df containing all events to add
         with open('eventIDs.txt', 'w') as f:
-            for index in allEvents.index:
+            for index in allEvents.index: #iterate through all events
                 eventTime = allEvents["Time"][index]
                 start = datetime.datetime.strptime(eventTime, "%m/%d/%y %I:%M %p").isoformat() + 'Z' 
-                if start > now:
+                if start > now: #only add events that are upcoming
                     try:
                         created_event = service.events().quickAdd(
                         calendarId=CALENDAR,
                         text = allEvents["Type"][index] + " on " + eventTime + " for " + EVENT_DURATION + " minutes").execute()
-                        f.write(created_event["id"] + "\n")
+                        f.write(created_event["id"] + "\n") #add ID of added event into eventIDs.txt
                     except HttpError as error:
                         break
-        f.close()
-
-
-
+        print("Added events.")
     except HttpError as error:
         print('An error occurred: %s' % error)
 
@@ -99,7 +100,6 @@ def grabEvents():
     for index, value in enumerate(data):
         data[index] = np.char.strip(value)
         
-        #test
     data_length = data.size
 
     #remove header text and column indices
