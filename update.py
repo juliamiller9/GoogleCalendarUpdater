@@ -19,7 +19,7 @@ import numpy as np
 import pandas as pd
 import re
 
-test_calendar = "c_a8250bb9bcb5c691746693d42541f09b7e5bdc1ee6eac7dad4fc8ffb02dde462@group.calendar.google.com"
+#calendar ID
 cyclotron_facility_use = "rr683mb1llhgtj1lvpu1f10jro@group.calendar.google.com"
 
 # If modifying these scopes, delete the file token.json.
@@ -84,7 +84,7 @@ def main(allEvents):
     except HttpError as error:
         print('An error occurred: %s' % error)
 
-#allEvents = dataframe consisting of all events to be added to calendar
+#allEvents = dataframe with of all events to be added to calendar
 
 def grabEvents():
     #name of file to be read
