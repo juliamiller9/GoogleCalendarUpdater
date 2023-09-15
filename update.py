@@ -70,7 +70,8 @@ def main(allEvents):
         #allEvents is df containing all events to add
         with open('eventIDs.txt', 'w') as f:
             for index in allEvents.index: #iterate through all events
-                eventTime = allEvents["Time"][index]
+              	sleep(2)  
+		eventTime = allEvents["Time"][index]
                 start = datetime.datetime.strptime(eventTime, "%m/%d/%y %I:%M %p").isoformat() + 'Z' 
                 if start > now: #only add events that are upcoming
                     try:
