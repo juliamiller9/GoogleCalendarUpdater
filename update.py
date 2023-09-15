@@ -1,6 +1,6 @@
 #Julia Miller
 #Last updated May 22, 2023
-#Based off of quickstart.py from https://developers.google.com/calendar/api/quickstart/python
+#aased off of quickstart.py from https://developers.google.com/calendar/api/quickstart/python
 
 from __future__ import print_function
 
