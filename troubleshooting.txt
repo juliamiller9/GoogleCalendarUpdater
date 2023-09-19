@@ -1,0 +1,18 @@
+Code to run in shell (local on my Mac):
+cd Desktop
+mv CyclotronSched.html Work/Projects/GoogleCalendarUpdater/
+cd Work/Projects/GoogleCalendarUpdater/
+python3 update.py
+
+Test run in mail.uwmcf.uw.edu:
+move the html file you want to run with into /home/juliam00/schedules (you can move an archived schedule from /home/juliam00/jm/GoogleCalendarUpdater) 
+rename the file to "CyclotronSched.html"
+go to /home/juliam00/jm/bin
+run updates.sh (./updates.sh)
+otherwise updates.sh runs whenever an email with the correct subject is sent to my inbox
+
+To clear out archived schedules from ~/GoogleCalendarUpdater, first ensure you are deleted only the files you want to by running:
+find . -type f -name CyclotronSched.html.\*
+
+then delete with:
+find . -type f -name CyclotronSched.html.\* -exec rm {} \;
