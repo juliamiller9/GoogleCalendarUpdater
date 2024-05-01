@@ -134,14 +134,18 @@ def grabEvents():
                 types[index] = "Conformal"
             elif row["Notes"].find("VSIM") == 1:
                 types[index] = "VSIM"
+            elif row["Notes"].find("TBI") == 1:
+                types[index] = "TBI"
+            elif row["Notes"].find("FX") == 1:
+                types[index] = "Film and Treat"
             else:
-                types[index] = "IMNT"
+                types[index] = "Treatment"
         elif row["Desc."] == "Verify Sim":
             types[index] = "VSIM"
         elif row["Desc."] == "Sim No Charge":
             types[index] = "TBI"
         else:
-            types[index] == "Unknown"
+            types[index] = "Unknown"
 
     df["Type"] = types
 
