@@ -1,6 +1,5 @@
 #Julia Miller
-#Last updated May 22, 2023
-#aased off of quickstart.py from https://developers.google.com/calendar/api/quickstart/python
+#based off of quickstart.py from https://developers.google.com/calendar/api/quickstart/python
 
 from __future__ import print_function
 
@@ -129,7 +128,7 @@ def grabEvents():
     #create a new column in the dataframe indicating event type (IMNT, conformal, VISM, or TBI)
     types = ["" for x in range(len(df.index))]
     for index, row in df.iterrows():
-        if row["Desc."] == "Neutrons TC":
+        if row["Desc."] == "Neutrons TC" or row["Desc."] == "End of Tx TC": 
             if row["Notes"].find("IMNT") == -1:
                 types[index] = "Conformal"
             elif row["Notes"].find("VSIM") == 1:
