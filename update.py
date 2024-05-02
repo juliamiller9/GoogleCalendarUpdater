@@ -131,11 +131,11 @@ def grabEvents():
         if row["Desc."] == "Neutrons TC" or row["Desc."] == "End of Tx TC": 
             if row["Notes"].find("IMNT") == -1:
                 types[index] = "Conformal"
-            elif row["Notes"].find("VSIM") == 1:
+            elif row["Notes"].find("VSIM") != 1:
                 types[index] = "VSIM"
-            elif row["Notes"].find("TBI") == 1:
+            elif row["Notes"].find("TBI") != 1:
                 types[index] = "TBI"
-            elif row["Notes"].find("FX") == 1:
+            elif row["Notes"].find("FX") != 1:
                 types[index] = "Film and Treat"
             else:
                 types[index] = "Treatment"
