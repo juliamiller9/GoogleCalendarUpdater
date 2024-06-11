@@ -125,17 +125,20 @@ def grabEvents():
     #reset indices after dropping rows
     df = df.reset_index().drop(["index"], axis=1)
 
+    #make "Notes" column lowercase
+    df["Notes"].str.lower()
+    
     #create a new column in the dataframe indicating event type (IMNT, conformal, VISM, or TBI)
     types = ["" for x in range(len(df.index))]
     for index, row in df.iterrows():
         if row["Desc."] == "Neutrons TC" or row["Desc."] == "End of Tx TC": 
-            if row["Notes"].find("IMNT") == -1:
+            if row["Notes"].find("imnt") == -1:
                 types[index] = "Conformal"
-            elif row["Notes"].find("VSIM") != 1:
+            elif row["Notes"].find("vsim") != 1:
                 types[index] = "VSIM"
-            elif row["Notes"].find("TBI") != 1:
+            elif row["Notes"].find("tbi") != 1:
                 types[index] = "TBI"
-            elif row["Notes"].find("FX") != 1:
+            elif row["Notes"].find("fx") != 1:
                 types[index] = "Film and Treat"
             else:
                 types[index] = "Treatment"
