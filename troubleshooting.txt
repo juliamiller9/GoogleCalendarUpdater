@@ -1,3 +1,10 @@
+NOTE: Code is currently on Julia's personal Github. Could be worth cloning to Gittea
+ 
+The code below hs beeen writen into a shell script in /home/juliam00/bin called rerun.sh   
+It will rerun the schedule update with the most recent CyclotronSched.html file recieved
+1) Delete all events on Google calendar if reruning due to a double addition of events 
+2) run ./rerun.sh to readd events 
+
 Code to run in shell (local on my Mac):
 cd Desktop
 mv CyclotronSched.html Work/Projects/GoogleCalendarUpdater/
